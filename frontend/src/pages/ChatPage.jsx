@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 
 import ChatLoader from "../components/ChatLoader";
 import CallButton from "../components/CallButton";
+import CustomChannelHeader from "../components/CustomChannelHeader";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
@@ -33,7 +34,7 @@ const ChatPage = () => {
   const { data: tokenData } = useQuery({
     queryKey: ["streamToken"],
     queryFn: getStreamToken,
-    enabled: !!authUser, // this will run only when authUser is available
+    enabled: !!authUser,
   });
 
   useEffect(() => {
@@ -41,8 +42,6 @@ const ChatPage = () => {
       if (!tokenData?.token || !authUser) return;
 
       try {
-        console.log("Initializing stream chat client...");
-
         const client = StreamChat.getInstance(STREAM_API_KEY);
 
         await client.connectUser(
@@ -54,12 +53,7 @@ const ChatPage = () => {
           tokenData.token
         );
 
-        //
         const channelId = [authUser._id, targetUserId].sort().join("-");
-
-        // you and me
-        // if i start the chat => channelId: [myId, yourId]
-        // if you start the chat => channelId: [yourId, myId]  => [myId,yourId]
 
         const currChannel = client.channel("messaging", channelId, {
           members: [authUser._id, targetUserId],
@@ -83,11 +77,9 @@ const ChatPage = () => {
   const handleVideoCall = () => {
     if (channel) {
       const callUrl = `${window.location.origin}/call/${channel.id}`;
-
       channel.sendMessage({
         text: `I've started a video call. Join me here: ${callUrl}`,
       });
-
       toast.success("Video call link sent successfully!");
     }
   };
@@ -95,21 +87,32 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="h-[93vh]">
-      <Chat client={chatClient}>
-        <Channel channel={channel}>
-          <div className="w-full relative">
-            <CallButton handleVideoCall={handleVideoCall} />
-            <Window>
-              <ChannelHeader />
-              <MessageList />
-              <MessageInput focus />
-            </Window>
-          </div>
-          <Thread />
-        </Channel>
-      </Chat>
+    // Background overlay for large screens
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center lg:px-4">
+      {/* Chat container */}
+      <div
+        className={`
+          bg-white dark:bg-zinc-900 w-full h-full
+          lg:max-w-4xl lg:max-h-[90vh] lg:rounded-xl lg:overflow-hidden
+          flex flex-col
+        `}
+      >
+        <Chat client={chatClient}>
+          <Channel channel={channel}>
+            <div className="w-full relative flex-1">
+              <CallButton handleVideoCall={handleVideoCall} />
+              <Window>
+                <CustomChannelHeader />
+                <MessageList />
+                <MessageInput focus />
+              </Window>
+            </div>
+            <Thread />
+          </Channel>
+        </Chat>
+      </div>
     </div>
   );
 };
+
 export default ChatPage;
