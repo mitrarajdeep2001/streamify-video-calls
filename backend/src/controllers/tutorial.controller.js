@@ -2,20 +2,25 @@ import axios from "axios";
 
 export async function getTutorials(req, res) {
   try {
-    const { pageToken = "" } = req.query;
+    const { pageToken , limit = 600 } = req.query;
 
+    const params = {
+      part: "snippet",
+      q: "english tutorials 2025",
+      type: "video",
+      maxResults: limit,
+      relevanceLanguage: "en",
+      key: process.env.YOUTUBE_API_KEY,
+    };
+
+    if (pageToken !== "null") {
+      params.pageToken = pageToken;
+    }
+    
     const response = await axios.get(
       `https://www.googleapis.com/youtube/v3/search`,
       {
-        params: {
-          part: "snippet",
-          q: "english tutorials 2025",
-          type: "video",
-          maxResults: 5,
-          relevanceLanguage: "en",
-          key: process.env.YOUTUBE_API_KEY,
-          pageToken,
-        },
+        params,
       }
     );
 
@@ -37,7 +42,6 @@ export async function getTutorials(req, res) {
       totalResults: response.data.pageInfo.totalResults,
     });
   } catch (error) {
-    console.error("Error in getTutorials controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Quota exceeded! Please try again later." });
   }
 }

@@ -5,7 +5,7 @@ import { getUserFriends } from "../lib/api";
 import { Link } from "react-router";
 import { UsersIcon } from "lucide-react";
 
-const Friends = ({ count = 3 }) => {
+const Friends = ({ count = 3, pageType = "home" }) => {
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
     queryFn: getUserFriends,
@@ -16,7 +16,7 @@ const Friends = ({ count = 3 }) => {
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
           Your Friends
         </h2>
-        {friends.length > 0 && (
+        {(pageType === "home" && friends.length > 0) && (
           <Link to="/friends" className="btn btn-outline btn-sm">
             <UsersIcon className="mr-2 size-4" />
             View More

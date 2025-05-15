@@ -63,3 +63,8 @@ export async function getStreamToken() {
   const response = await axiosInstance.get("/chat/token");
   return response.data;
 }
+
+export async function getTutorials(pageToken) {
+  const response = await axiosInstance.get(`/tutorials?pageToken=${pageToken}`);
+  return response.data;
+}
