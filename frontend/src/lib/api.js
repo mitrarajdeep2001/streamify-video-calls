@@ -64,7 +64,12 @@ export async function getStreamToken() {
   return response.data;
 }
 
-export async function getTutorials(pageToken) {
-  const response = await axiosInstance.get(`/tutorials?pageToken=${pageToken}`);
+export async function getTutorials(page) {
+  const response = await axiosInstance.get(`/tutorials?page=${page}`);
+  return response.data;
+}
+
+export async function setAiPrompt(prompt) {
+  const response = await axiosInstance.post(`/prompts/generate`, prompt);
   return response.data;
 }

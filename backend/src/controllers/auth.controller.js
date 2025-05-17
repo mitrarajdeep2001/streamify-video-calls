@@ -1,6 +1,13 @@
 import { upsertStreamUser } from "../lib/stream.js";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Setup __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.join(__dirname, "../../"); // go back to project root
 
 export async function signup(req, res) {
   const { email, password, fullName } = req.body;
@@ -29,9 +36,13 @@ export async function signup(req, res) {
         .json({ message: "Email already exists, please use a diffrent one" });
     }
 
-    const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
-    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-
+    const idx = Math.floor(Math.random() * 50) + 1;
+    const randomAvatar = path.join(
+      rootDir,
+      "public",
+      "avatars",
+      `male-${idx}.png`
+    );
     const newUser = await User.create({
       email,
       fullName,

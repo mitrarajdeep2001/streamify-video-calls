@@ -6,26 +6,26 @@ import { PlayCircleIcon, X } from "lucide-react"; // Optional close icon
 import PageLoader from "../components/PageLoader";
 
 const TutorialsPage = () => {
-  const [pageToken, setPageToken] = useState(null);
+  const [page, setPage] = useState(1);
   const [selectedVideoId, setSelectedVideoId] = useState(null);
 
   const {
-    data = { videos: [], nextPageToken: null, prevPageToken: null },
+    data = { videos: [], hasNextPage: false, hasPrevPage: false },
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["tutorials", pageToken],
-    queryFn: () => getTutorials(pageToken),
+    queryKey: ["tutorials", page],
+    queryFn: () => getTutorials(page),
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   });
 
   const handleNext = () => {
-    if (data.nextPageToken) setPageToken(data.nextPageToken);
+    if (data.hasNextPage) setPage((prev) => prev + 1);
   };
 
   const handlePrev = () => {
-    if (data.prevPageToken) setPageToken(data.prevPageToken);
+    if (data.hasPrevPage) setPage((prev) => prev - 1);
   };
 
   if (isLoading) {
@@ -48,7 +48,7 @@ const TutorialsPage = () => {
         {data.videos.map((video) => (
           <div
             key={video.videoId}
-            className="relative card bg-base-200 hover:shadow-lg transition-shadow rounded-lg overflow-hidden cursor-pointer group"
+            className="relative card bg-base-200 hover:shadow-lg transition-shadow overflow-hidden group"
           >
             <img
               src={video.thumbnail.replace("default", "mqdefault")}
@@ -57,11 +57,11 @@ const TutorialsPage = () => {
             />
 
             {/* Play Button */}
-            <div
-              onClick={() => setSelectedVideoId(video.videoId)}
-              className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <button className="btn btn-circle btn-primary h-20 w-20 shadow-xl">
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                onClick={() => setSelectedVideoId(video.videoId)}
+                className="btn btn-circle btn-primary h-20 w-20 shadow-xl"
+              >
                 <PlayCircleIcon className="h-10 w-10 text-white" />
               </button>
             </div>
@@ -80,15 +80,15 @@ const TutorialsPage = () => {
       <div className="flex justify-center gap-4">
         <button
           onClick={handlePrev}
-          disabled={!data.prevPageToken}
-          className="btn btn-outline rounded-full"
+          disabled={!data.hasPrevPage}
+          className="btn btn-outline"
         >
           Previous
         </button>
         <button
           onClick={handleNext}
-          disabled={!data.nextPageToken}
-          className="btn btn-primary rounded-full"
+          disabled={!data.hasNextPage}
+          className="btn btn-primary"
         >
           Next
         </button>
@@ -102,7 +102,7 @@ const TutorialsPage = () => {
       >
         <div className="relative w-full max-w-4xl px-4">
           <button
-            className="absolute top-2 right-2 text-white z-10"
+            className="absolute top-1 right-4 text-white z-10"
             onClick={() => setSelectedVideoId(null)}
           >
             <X size={24} />

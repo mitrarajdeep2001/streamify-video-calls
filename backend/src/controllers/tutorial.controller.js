@@ -1,47 +1,47 @@
-import axios from "axios";
+// controllers/tutorialController.js
+import Tutorial from "../models/Tutorial.js";
 
 export async function getTutorials(req, res) {
   try {
-    const { pageToken , limit = 600 } = req.query;
+    const { page = 1, limit = 6 } = req.query;
+    console.log(req.user.learningLanguage.toLowerCase());
+    const query = req.user.learningLanguage
+      ? {
+          language: {
+            $regex: req.user.learningLanguage,
+            $options: "i",
+          },
+          title: {
+            $regex: req.user.learningLanguage,
+            $options: "i",
+          },
+        }
+      : {};
 
-    const params = {
-      part: "snippet",
-      q: "english tutorials 2025",
-      type: "video",
-      maxResults: limit,
-      relevanceLanguage: "en",
-      key: process.env.YOUTUBE_API_KEY,
-    };
+    const skip = (Number(page) - 1) * Number(limit);
 
-    if (pageToken !== "null") {
-      params.pageToken = pageToken;
-    }
-    
-    const response = await axios.get(
-      `https://www.googleapis.com/youtube/v3/search`,
-      {
-        params,
-      }
-    );
+    const [videos, total] = await Promise.all([
+      Tutorial.find(query)
+        .sort({ createdAt: -1 }) // Latest first
+        .skip(skip)
+        .limit(Number(limit)),
+      Tutorial.countDocuments(query),
+    ]);
 
-    if (!response.data || response.data.items.length === 0) {
-      return res.status(404).json({ message: "No tutorials found" });
-    }
-
-    const videos = response.data.items.map((item) => ({
-      videoId: item.id.videoId,
-      title: item.snippet.title,
-      channel: item.snippet.channelTitle,
-      thumbnail: item.snippet.thumbnails?.default?.url,
-    }));
+    const totalPages = Math.ceil(total / Number(limit));
 
     res.status(200).json({
       videos,
-      nextPageToken: response.data.nextPageToken || null,
-      prevPageToken: response.data.prevPageToken || null,
-      totalResults: response.data.pageInfo.totalResults,
+      page: Number(page),
+      totalPages,
+      totalResults: total,
+      hasNextPage: Number(page) < totalPages,
+      hasPrevPage: Number(page) > 1,
     });
   } catch (error) {
-    res.status(500).json({ message: "Quota exceeded! Please try again later." });
+    res.status(500).json({
+      message: "Error fetching tutorials",
+      error: error.message,
+    });
   }
 }

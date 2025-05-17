@@ -17,6 +17,7 @@ import { useThemeStore } from "./store/useThemeStore.js";
 import FriendsPage from "./pages/FriendsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import TutorialsPage from "./pages/TutorialsPage.jsx";
+import LearnWithAI from "./pages/LearnWithAI.jsx";
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
@@ -80,6 +81,18 @@ const App = () => {
             isAuthenticated && isOnboarded ? (
               <Layout showSidebar={true}>
                 <TutorialsPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
+        />
+        <Route
+          path="/learn-with-ai"
+          element={
+            isAuthenticated && isOnboarded ? (
+              <Layout showSidebar={true}>
+                <LearnWithAI />
               </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />

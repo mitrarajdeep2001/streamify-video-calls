@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
-import { BellIcon, HomeIcon, LogOutIcon, ShipWheelIcon, UserCircleIcon, UsersIcon, VideoIcon } from "lucide-react";
+import { AtomIcon, BellIcon, HomeIcon, LogOutIcon, ShipWheelIcon, UserCircleIcon, UsersIcon, VideoIcon } from "lucide-react";
 import useLogout from "../hooks/useLogout";
 
 const Sidebar = () => {
@@ -49,6 +49,16 @@ const Sidebar = () => {
         >
           <VideoIcon className="size-5 text-base-content opacity-70" />
           <span>Tutorials</span>
+        </Link>
+
+        <Link
+          to="/learn-with-ai"
+          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
+            currentPath === "/learn-with-ai" ? "btn-active" : ""
+          }`}
+        >
+          <AtomIcon className="size-5 text-base-content opacity-70" />
+          <span>Learm With AI</span>
         </Link>
 
         {/* <Link
