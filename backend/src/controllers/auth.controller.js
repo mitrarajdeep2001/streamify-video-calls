@@ -36,13 +36,10 @@ export async function signup(req, res) {
         .json({ message: "Email already exists, please use a diffrent one" });
     }
 
-    const idx = Math.floor(Math.random() * 50) + 1;
-    const randomAvatar = path.join(
-      rootDir,
-      "public",
-      "avatars",
-      `male-${idx}.png`
-    );
+    const idx = Math.floor(Math.random() * 50) + 1; // 1-50 included
+    const randomGender =
+      Math.floor(Math.random() * 2) === 0 ? "male" : "female"; // Randomly choose between male or female
+    const randomAvatar = path.join("avatars", `${randomGender}-${idx}.png`);
     const newUser = await User.create({
       email,
       fullName,

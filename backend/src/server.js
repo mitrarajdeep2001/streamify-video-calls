@@ -10,6 +10,7 @@ import chatRoutes from "./routes/chat.route.js";
 import tutorialRoutes from "./routes/tutorial.route.js";
 import promptRoutes from "./routes/prompt.route.js";
 import notificationRoutes from "./routes/notification.route.js";
+import othersRoutes from "./routes/others.route.js";
 
 import { connectDB } from "./lib/db.js";
 import { fileURLToPath } from "url";
@@ -60,6 +61,7 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/tutorials", tutorialRoutes);
 app.use("/api/prompts", promptRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/others", othersRoutes);
 
 // if (process.env.NODE_ENV === "production") {
 //   app.use(express.static(path.join(__dirname, "../frontend/dist")));

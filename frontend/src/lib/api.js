@@ -100,3 +100,8 @@ export async function setAiPrompt(prompt) {
   const response = await axiosInstance.post(`/prompts/generate`, prompt);
   return response.data;
 }
+
+export async function generateRandomAvatar() {
+  const response = await axiosInstance.get(`/others/generate/random-avatar`);
+  return response.data;
+}

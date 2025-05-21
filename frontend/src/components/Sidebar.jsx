@@ -1,7 +1,17 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
-import { AtomIcon, BellIcon, HomeIcon, LogOutIcon, ShipWheelIcon, UserCircleIcon, UsersIcon, VideoIcon } from "lucide-react";
+import {
+  AtomIcon,
+  BellIcon,
+  HomeIcon,
+  LogOutIcon,
+  ShipWheelIcon,
+  UserCircleIcon,
+  UsersIcon,
+  VideoIcon,
+} from "lucide-react";
 import useLogout from "../hooks/useLogout";
+import { BASE_URL_PUBLIC } from "../lib/axios";
 
 const Sidebar = () => {
   const { authUser } = useAuthUser();
@@ -87,7 +97,10 @@ const Sidebar = () => {
         <div className="flex items-center gap-3">
           <div className="avatar">
             <div className="w-10 rounded-full">
-              <img src={authUser?.profilePic} alt="User Avatar" />
+              <img
+                src={BASE_URL_PUBLIC + "/" + authUser?.profilePic}
+                alt={authUser?.fullName}
+              />
             </div>
           </div>
           <div className="flex-1">

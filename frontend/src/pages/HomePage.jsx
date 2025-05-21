@@ -5,15 +5,12 @@ import {
   getRecommendedUsers,
   sendFriendRequest,
 } from "../lib/api";
-import {
-  CheckCircleIcon,
-  MapPinIcon,
-  UserPlusIcon,
-} from "lucide-react";
+import { CheckCircleIcon, MapPinIcon, UserPlusIcon } from "lucide-react";
 
 import { capitialize } from "../lib/utils";
 import Friends from "../components/Friends";
 import { getLanguageFlag } from "../components/FriendCard";
+import { BASE_URL_PUBLIC } from "../lib/axios";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -90,7 +87,11 @@ const HomePage = () => {
                     <div className="card-body p-5 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="avatar size-16 rounded-full">
-                          <img src={user.profilePic} alt={user.fullName} />
+                          <img
+                            friend
+                            src={BASE_URL_PUBLIC + "/" + user?.profilePic}
+                            alt={user.fullName}
+                          />
                         </div>
 
                         <div>

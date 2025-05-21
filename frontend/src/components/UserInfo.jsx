@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAuthUser from "../hooks/useAuthUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { completeOnboarding } from "../lib/api";
+import { completeOnboarding, generateRandomAvatar } from "../lib/api";
 import {
   LoaderIcon,
   MapPinIcon,
@@ -10,6 +10,7 @@ import {
   ShuffleIcon,
 } from "lucide-react";
 import { GENDERS, LANGUAGES } from "../constants";
+import { BASE_URL_PUBLIC } from "../lib/axios";
 
 const UserInfo = ({ pageType = "onboarding" }) => {
   const { authUser } = useAuthUser();
@@ -43,12 +44,11 @@ const UserInfo = ({ pageType = "onboarding" }) => {
     onboardingMutation(formState);
   };
 
-  const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 50) + 1; // 1-50 included
-    const randomAvatar = `${
-      import.meta.env.VITE_BASE_URL_PUBLIC
-    }/avatars/male-${idx}.png`;
-    setFormState({ ...formState, profilePic: randomAvatar });
+  const handleRandomAvatar = async () => {
+    const avatarURL = await generateRandomAvatar();
+    console.log(avatarURL, "avatarURL");
+
+    setFormState({ ...formState, profilePic: avatarURL.avatar_url });
     toast.success("Random profile picture generated!");
   };
 
@@ -87,7 +87,7 @@ const UserInfo = ({ pageType = "onboarding" }) => {
               <div className="size-32 rounded-full bg-base-300 overflow-hidden">
                 {formState.profilePic ? (
                   <img
-                    src={formState.profilePic}
+                    src={BASE_URL_PUBLIC + "/" + formState.profilePic}
                     alt="Profile Preview"
                     className="w-full h-full object-cover"
                   />

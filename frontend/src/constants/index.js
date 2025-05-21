@@ -183,7 +183,6 @@ export const LANGUAGES = [
 export const GENDERS = [
   "Male",
   "Female",
-  "Other",
 ]
 
 export const LANGUAGE_TO_FLAG = {

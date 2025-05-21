@@ -39,7 +39,7 @@ const TutorialsPage = () => {
   }
 
   return (
-    <div className="p-4 space-y-6 container mx-auto">
+    <div className="p-4 space-y-6 container mx-auto h-full">
       {/* Grid */}
       <div
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
@@ -77,22 +77,29 @@ const TutorialsPage = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center gap-4">
-        <button
-          onClick={handlePrev}
-          disabled={!data.hasPrevPage}
-          className="btn btn-outline"
-        >
-          Previous
-        </button>
-        <button
-          onClick={handleNext}
-          disabled={!data.hasNextPage}
-          className="btn btn-primary"
-        >
-          Next
-        </button>
-      </div>
+      {data.videos.length > 0 && (
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={handlePrev}
+            disabled={!data.hasPrevPage}
+            className="btn btn-outline"
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={!data.hasNextPage}
+            className="btn btn-primary"
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {/* No Videos Found */}
+      {data.videos.length === 0 && (
+        <p className="text-center text-4xl text-primary h-[calc(100vh-150px)] flex items-center justify-center">Tutorials coming soon!</p>
+      )}
 
       {/* Modal to Play Video */}
       <Dialog
