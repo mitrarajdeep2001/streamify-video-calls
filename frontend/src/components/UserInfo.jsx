@@ -253,7 +253,7 @@ const UserInfo = ({ pageType = "onboarding" }) => {
               {/* SUBMIT BUTTON */}
 
               <button
-                className={`btn btn-primary w-full ${pageType === "onboarding" ? "" : "mt-4"}`}
+                className={`btn btn-primary w-full mt-4`}
                 disabled={isPending}
                 type="submit"
               >

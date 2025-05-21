@@ -9,9 +9,10 @@ const CustomChannelHeader = () => {
 
   const members = Object.values(channel.state.members || {});
   const otherMember = members.find((m) => m.user?.id !== client.userID);
+  console.log(otherMember?.user.online);
 
   return (
-    <div className="flex items-center gap-2 px-3 py-2 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+    <div className="flex items-center gap-2 px-3 py-2 border-b border-secondary bg-primary">
       <button
         onClick={() => navigate(-1)}
         className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-200 cursor-pointer z-50 relative"
@@ -31,7 +32,10 @@ const CustomChannelHeader = () => {
         <p className="font-medium text-sm text-zinc-900 dark:text-zinc-100">
           {otherMember?.user?.name}
         </p>
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">Online</span>
+        {/* Online status */}
+        <span className="text-xs text-zinc-500">
+          {otherMember?.user?.online ? "Online" : "Offline"}
+        </span>
       </div>
     </div>
   );

@@ -3,17 +3,18 @@ import useAuthUser from "../hooks/useAuthUser";
 import { BellIcon, LogOutIcon, ShipWheelIcon } from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
 import useLogout from "../hooks/useLogout";
+import { getUnreadNotificationsCount } from "../lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
   const { authUser } = useAuthUser();
   const location = useLocation();
   const isChatPage = location.pathname?.startsWith("/chat");
 
-  // const queryClient = useQueryClient();
-  // const { mutate: logoutMutation } = useMutation({
-  //   mutationFn: logout,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  // });
+  const { data, isLoading } = useQuery({
+    queryKey: ["unreadNotificationsCount"],
+    queryFn: getUnreadNotificationsCount,
+  });
 
   const { logoutMutation } = useLogout();
 
@@ -35,9 +36,16 @@ const Navbar = () => {
 
           <div className="flex items-center gap-3 sm:gap-4 ml-auto">
             <Link to={"/notifications"}>
-              <button className="btn btn-ghost btn-circle">
-                <BellIcon className="h-6 w-6 text-base-content opacity-70" />
-              </button>
+              <div className="relative">
+                <button className="btn btn-ghost btn-circle">
+                  <BellIcon className="h-6 w-6 text-base-content opacity-70" />
+                </button>
+                {data?.unreadCount > 0 && (
+                  <span className="absolute top-2 right-2 bg-primary text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                    {data?.unreadCount}
+                  </span>
+                )}
+              </div>
             </Link>
           </div>
 
